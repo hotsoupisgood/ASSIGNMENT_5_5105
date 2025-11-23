@@ -19,21 +19,30 @@ ui <- dashboardPage(
   ),
   dashboardBody(
     tabBox(width = 12, id = "tabs",
-           tabPanel("Scatter Plot", 
-                    fluidRow(box(width=12, title = "Scatter Plot", collapsible = TRUE, status = "warning", solidHeader = TRUE,
-                                 plotOutput("plot1")))
+           
+           tabPanel("Descriptive Table", 
+                    fluidRow(box(width=12, title = "Descriptive Table", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                                 plotOutput("table1")))
            ),
-           tabPanel("Data", 
+           tabPanel("Hospitalisation", 
                     fluidRow(
-                      box(width=12, title = "Data", collapsible = TRUE, status = "warning", solidHeader = TRUE,
-                          dataTableOutput("table1")) 
+                      box(width=12, title = "Hospitalisation", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                          dataTableOutput("plot1")) 
                     )
                     
            ),
-           tabPanel("line Plot", 
+           tabPanel("Death", 
                     fluidRow(box(width=12, title = "Scatter Plot", collapsible = TRUE, status = "warning", solidHeader = TRUE,
                                  plotOutput("plot2")))
+           ), 
+           tabPanel("Survival", 
+                       fluidRow(box(width=12, title = "Survival", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                                    plotOutput("plot3")))
            ),
+           tabPanel("Scatter", 
+                    fluidRow(box(width=12, title = "Scatter", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                                 plotOutput("plot4")))
+           )
     )
   )
 )
@@ -43,22 +52,19 @@ server <- function(input, output) {
   dig.df=read.csv("DIG.csv")
   
   dig_sub <- reactive({
-    dig.df %>% select(ID, TRTMT, AGE, SEX, BMI, KLEVEL, CREAT, DIABP, SYSBP, HYPERTEN, CVD, WHF, DIG, HOSP, HOSPDAYS, DEATH, DEATHDAY)
+    dig.df %>% select(ID, TRTMT, AGE, SEX, BMI, DIABP, SYSBP, HYPERTEN, CVD, WHF, HOSP,DEATH, DEATHDAY)
   })
   
-  output$plot1 <- renderPlot({ 
-    ggplot(data = dig_sub(), aes(x = AGE, y = BMI)) +
-      geom_point()
-  })
-  output$plot2 <- renderPlot({ 
-    ggplot(data = dig_sub(), aes(x = AGE, y = BMI)) +
-      geom_line()
-  })
+  #output$plot1 <- renderPlot({ 
+    #ggplot(data = dig_sub(), aes(x = AGE, y = BMI)) +
+    #  geom_point()
+  #})
+ 
   
-  output$table1 <- renderDataTable({ 
-    dig_sub()
-  })
-  
-}
+  output$table1 <-#make function to output table
+  output$table1 <-#make function to output plot1
+  output$table1 <-#make function to output plot 2
+  output$table1 <-#make function to output plot 3
+    
 
 shinyApp(ui = ui, server = server)
