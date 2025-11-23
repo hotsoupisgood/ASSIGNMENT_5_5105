@@ -1,4 +1,8 @@
+library(tidyverse)
+library(ggplot2)
 library(shinydashboard)
+library(dplyr)
+
 ui <- dashboardPage(
   dashboardHeader(title = "Palmer Penguins Explorer",titleWidth = 450,
                   tags$li(a(href = 'https://allisonhorst.github.io/palmerpenguins/',
@@ -33,6 +37,7 @@ ui <- dashboardPage(
     )
   )
 )
+
 
 server <- function(input, output) {
   dig.df=read.csv("DIG.csv")
