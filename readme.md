@@ -6,3 +6,8 @@ Version control: Use Git and GitHub for collaboration (both members contribute).
 Links to an external site..
 Deployment: Deploy to shinyapps.io. Docs: Deploying Shiny
 Links to an external site..
+
+## Delegation of work:
+* Misgana to build plots in the plots.rmd file
+* Lucas to assemble plots into a shiny app
+* Collaborating in design and plot selection
