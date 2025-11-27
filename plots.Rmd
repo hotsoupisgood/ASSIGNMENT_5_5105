@@ -1,1 +1,16 @@
-hello test d
+
+```{r}
+# Descriptive table
+library(dplyr)
+dig.df
+dig.df %>% select("Patient ID", TRTMT, AGE, SEX, BMI, DIABP, SYSBP, HYPERTEN, CVD, WHF, HOSP,DEATH, DEATHDAY)
+```
+
+```{r}
+#Plot 2
+```
+
+```{r}
+#plot 3
+```
+
