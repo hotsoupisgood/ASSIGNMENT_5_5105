@@ -4,43 +4,45 @@ library(shinydashboard)
 library(dplyr)
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Palmer Penguins Explorer",titleWidth = 450,
-                  tags$li(a(href = 'https://allisonhorst.github.io/palmerpenguins/',
-                            img(src = 'penguins.png',
-                                title = "Penguins Homepage", height = "30px", width = "50px"),
-                            style = "padding-top:10px; padding-bottom:10px;"),
+  skin = "green",
+  dashboardHeader(title = "Digitalis Investigation Group (DIG) Explorer",titleWidth = 450,
+                  tags$li(a(href = 'https://github.com/hotsoupisgood/ASSIGNMENT_5_5105',"Source (GitHub)"),
                           class = "dropdown")),
   
   dashboardSidebar(
-    selectInput(inputId = "species", label = "Select Penguin Species:", choices = c("Adelie", "Gentoo", "Chinstrap"), multiple = FALSE),
-    radioButtons(inputId = "sex", label = "Select Penguin Sex:", choices = c("female", "male")),
-    sliderInput("bmass", "Select Body Mass Range:", min = 2500, max = 7000, value = c(4000, 5000)),
-    sliderInput("year", "Select year of the study:", min = 2007, max = 2009, value = 2007, step = 1, animate = TRUE)
+    selectInput(inputId = "cvd",  label = "Filter on CVD Status:", choices = c("CVD", "No CVD", "All"), selected="All"),
+    selectInput(inputId = "sex", label = "Select Subject Sex:",    choices = c("female", "male"), multiple=T, selected=c("female","male")),
+    sliderInput("bmass", "Select Body Mass Range:",  min = 0, max = 25,   value = c(0, 25)),
+    sliderInput("age", "Select Age of the Subject:", min = 15, max = 100, value = c(15, 100))
   ),
   dashboardBody(
     tabBox(width = 12, id = "tabs",
-           
+           # Tab 1
            tabPanel("Descriptive Table", 
-                    fluidRow(box(width=12, title = "Descriptive Table", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                    fluidRow(box(width=12, title = "Descriptive Table", collapsible = F, status = "warning", solidHeader = TRUE,
                                  plotOutput("table1")))
            ),
+           # Tab 2
            tabPanel("Hospitalisation", 
                     fluidRow(
-                      box(width=12, title = "Hospitalisation", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                      box(width=12, title = "Hospitalisation", collapsible = F, status = "warning", solidHeader = TRUE,
                           dataTableOutput("plot1")) 
                     )
                     
            ),
+           # Tab 3
            tabPanel("Death", 
-                    fluidRow(box(width=12, title = "Scatter Plot", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                    fluidRow(box(width=12, title = "Scatter Plot", collapsible = F, status = "warning", solidHeader = TRUE,
                                  plotOutput("plot2")))
            ), 
+           # Tab 4
            tabPanel("Survival", 
-                       fluidRow(box(width=12, title = "Survival", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                       fluidRow(box(width=12, title = "Survival", collapsible = F, status = "warning", solidHeader = TRUE,
                                     plotOutput("plot3")))
            ),
+           # Tab 5
            tabPanel("Scatter", 
-                    fluidRow(box(width=12, title = "Scatter", collapsible = TRUE, status = "warning", solidHeader = TRUE,
+                    fluidRow(box(width=12, title = "Scatter", collapsible = F, status = "warning", solidHeader = TRUE,
                                  plotOutput("plot4")))
            )
     )
@@ -61,10 +63,10 @@ server <- function(input, output) {
   #})
  
   
-  output$table1 <-#make function to output table
-  output$table1 <-#make function to output plot1
-  output$table1 <-#make function to output plot 2
-  output$table1 <-#make function to output plot 3
-    
+  #output$table1 <-#make function to output table
+  #output$table1 <-#make function to output plot1
+  #output$table1 <-#make function to output plot 2
+  #output$table1 <-#make function to output plot 3
+}
 
 shinyApp(ui = ui, server = server)
