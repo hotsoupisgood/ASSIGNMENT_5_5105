@@ -78,26 +78,49 @@ server <- function(input, output) {
     return(df_copy)
   })
   # display mapping
-  
-  output$plot1 <- renderPlot({ 
-    #ggplot(data = dig_sub(), aes(x = AGE, y = BMI)) +
-    #Hospitalization
-    ggplot(data=dig_filtered_df(), aes(x=CVD, fill = factor(TRTMT))) + 
-      labs(x="Treatment",
-           title="Mortality between treatment groups") +
-      scale_fill_manual(values = c("#669933", "#FFCC66"),
-                        name = "Treatment group") +
-      geom_bar(alpha=0.7, position="fill") +
-      labs(x="Hospitalization for CVD", title = "Hospitalization in treatment and mortality groups")
-  })
- 
-  
+  # overview table
   output$table1=renderDataTable({
     dig_filtered_df()},
     options=list(
       scrollX = T
     )
   )
+  # hospitalization between treatment groups
+  output$plot1 <- renderPlot({ 
+    #Hospitalization
+    ggplot(data=dig_filtered_df(), aes(x=CVD, fill = factor(TRTMT))) + 
+      labs(x="Treatment",
+           title="Hospitalisation between treatment groups") +
+      scale_fill_manual(values = c("#669933", "#FFCC66"),
+                        name = "Treatment group") +
+      geom_bar(alpha=0.7, position="fill") +
+      labs(x="Hospitalization for CVD",title = "Hospitalization in due to CVD in each")
+  })
+  
+  #Hospitalization due to CVD
+  output$plot2 <- renderPlot({ 
+    ggplot(data=dig_filtered_df(), aes(x=CVD, fill = factor(TRTMT))) + 
+      labs(x="Treatment",
+           title="Hospitalisation between treatment groups") +
+      scale_fill_manual(values = c("#669933", "#FFCC66"),
+                        name = "Treatment group") +
+      geom_bar(alpha=0.7, position="fill") +
+      labs(x="Hospitalization for CVD",title = "Hospitalization in due to CVD in each")
+  })
+  
+  # Hospitalisation due to WHF
+  output$plot3 <- renderPlot({ 
+    ggplot(data=dig_filtered_df(), aes(x=WHF, fill = factor(TRTMT))) + 
+      labs(x="Treatment",
+           title="Hospitalisation between treatment groups") +
+      scale_fill_manual(values = c("#f09c1b", "#4f78b4"),
+                        name = "Treatment group") +
+      geom_bar(alpha=0.7, position="fill") +
+      labs(x="Hospitalization for CVD",title = "Hospitalization due to WHF in treatment groups")
+    
+  })
+ 
+  
   #output$table1 <-#make function to output plot1
   #output$table1 <-#make function to output plot 2
   #output$table1 <-#make function to output plot 3
