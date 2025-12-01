@@ -34,6 +34,18 @@ dig.df %>% ggplot(aes(x=WHF, fill = factor(TRTMT))) +
 ```{r}
 #Plot 4
 #Death due to CVD
+library(tidyr)
+library(plotly)
+             
+cvd_mortality_by_treatment<- dig.df%>%
+  group_by(TRTMT, CVD)%>%
+  summarise(
+    Total = n(),
+    Deaths = sum(DEATH== "Death", na.rm = T),
+    Mortality_Rate = Deaths/Total
+  )
+cvd_mortality_by_treatment
+
 
 cvd_plot_strat<- ggplot(cvd_mortality_by_treatment,
                         aes(x = CVD, y=Mortality_Rate , fill = TRTMT))+
@@ -55,6 +67,16 @@ ggplotly(cvd_plot_strat)
 
 ```{r}
 #Death due to WHF
+library(tidyr)
+             
+whf_mortality_by_treatment<- dig.df%>%
+  group_by(TRTMT, WHF)%>%
+  summarise(
+    Total = n(),
+    Deaths = sum(DEATH== "Death", na.rm = T),
+    Mortality_Rate = Deaths/Total
+  )
+whf_mortality_by_treatment
 whf_plot_strat<- ggplot(whf_mortality_by_treatment,
                         aes(x = WHF, y=Mortality_Rate , fill = TRTMT))+
   #using position dodge to place each treatment groups side by side
