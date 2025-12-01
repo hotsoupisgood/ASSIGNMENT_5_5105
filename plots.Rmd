@@ -1,1 +1,35 @@
-hello test d
+
+```{r}
+# Descriptive table
+library(tidyverse)
+dig.df
+```
+Instead of selecting the columns here, i did the cooking in the Assignment 4 then i just brought the output here.I will try to change the title of the columns later, to be more discernable. 
+```{r}
+#Plot 2 
+#Hospitalization
+dig.df %>% ggplot(aes(x=CVD, fill = factor(TRTMT))) + 
+  labs(x="Treatment",
+       title="Mortality between treatment groups") +
+  scale_fill_manual(values = c("#669933", "#FFCC66"),
+    name = "Treatment group") +
+  geom_bar(alpha=0.7, position="fill") +
+  labs(x="Hospitalization for CVD",title = "Hospitalization in treatment and mortality groups")
+```
+
+```{r}
+#Plot 3
+#Death 
+
+```
+
+```{r}
+#Plot 4
+#Survival 
+```
+
+```{r}
+#Plot5
+#Scatter
+```
+

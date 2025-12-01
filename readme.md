@@ -11,3 +11,19 @@ Links to an external site..
 * Misgana to build plots in the plots.rmd file
 * Lucas to assemble plots into a shiny app
 * Collaborating in design and plot selection
+
+
+## how to git
+### how to add files to a commit
+```git add replace-me-with-file-name```
+### how to commit your changes (save them locally)
+```git commit -m "some description of your changes"```
+### how to push your changes to github (save them to github)
+```git push```
+### how to pull changes from github (get new changes from github that another member may have pushed)
+- Good to do this before you push
+```git pull```
+### how to switch branchs
+```git checkout replace-me```
+### how to make a new branch
+```git checkout -b replace-me```
