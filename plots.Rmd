@@ -2,6 +2,53 @@
 ```{r}
 # Descriptive table
 library(tidyverse)
+
+dig.df<-read_csv("DIG.csv",
+                 col_types = "nnnnnnnnnnnnnnnnn")
+
+dig.df<- select(dig.df, "ID", "TRTMT", "AGE", "SEX", "BMI", "CREAT",
+         "DIABP", "SYSBP", "HYPERTEN", "CVD", "WHF", "HOSP", 
+         "HOSPDAYS", "DEATH", "DEATHDAY")
+dig.df <- na.omit(dig.df)
+
+colnames(dig.df)[1] <- "ID" 
+
+dig.df <- dig.df
+#TRTMT
+dig.df$TRTMT <- as.numeric(as.character(dig.df$TRTMT))
+dig.df$TRTMT<- factor(dig.df$TRTMT,
+                     levels = c(0,1),
+                     labels = c("placebo", "Digoxin"))
+
+#SEX
+dig.df$SEX <- as.numeric(as.character(dig.df$SEX))
+dig.df$SEX<- factor(dig.df$SEX,
+                     levels = c(1,2),
+                     labels = c("Male", "Female")) 
+
+dig.df$CVD <- factor(dig.df$CVD ,
+                      levels = c(0 , 1), 
+                      labels = c("No", "Yes"))
+# WHF
+dig.df$WHF <- factor(dig.df$WHF,
+                     levels  = c(0,1), 
+                      labels= c("Not Worsening HF", "Worsening HF"))
+
+dig.df$HOSP <- factor(dig.df$HOSP,
+                      levels  = c(0,1), 
+                      labels= c("Not Hospitalized", "Hospitalized"))
+#HYPERTEN
+dig.df$HYPERTEN <- as.numeric(as.character(dig.df$HYPERTEN))
+dig.df$HYPERTEN<- factor(dig.df$HYPERTEN,
+                     levels = c(0,1),
+                     labels = c("Not Hypertensive", "Hypertensive")) 
+
+#DEATH
+dig.df$DEATH <- as.numeric(as.character(dig.df$DEATH))
+dig.df$DEATH<- factor(dig.df$DEATH,
+                     levels = c(0,1),
+                     labels = c("Alive", "Death")) 
+
 dig.df
 ```
 Instead of selecting the columns here, i did the cooking in the Assignment 4 then i just brought the output here.I will try to change the title of the columns later, to be more discernable. 
@@ -103,5 +150,6 @@ ggplotly(whf_plot_strat)
 ```{r}
 #Plot5
 #Scatter
+
 ```
 
