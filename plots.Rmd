@@ -7,24 +7,74 @@ dig.df
 Instead of selecting the columns here, i did the cooking in the Assignment 4 then i just brought the output here.I will try to change the title of the columns later, to be more discernable. 
 ```{r}
 #Plot 2 
-#Hospitalization
+#Hospitalization due to CVD
 dig.df %>% ggplot(aes(x=CVD, fill = factor(TRTMT))) + 
   labs(x="Treatment",
-       title="Mortality between treatment groups") +
+       title="Hospitalisation between treatment groups") +
   scale_fill_manual(values = c("#669933", "#FFCC66"),
     name = "Treatment group") +
   geom_bar(alpha=0.7, position="fill") +
-  labs(x="Hospitalization for CVD",title = "Hospitalization in treatment and mortality groups")
+  labs(x="Hospitalization for CVD",title = "Hospitalization in due to CVD in each")
 ```
 
+
 ```{r}
-#Plot 3
-#Death 
+# Plot 3
+# Hospitalisation due to WHF
+dig.df %>% ggplot(aes(x=WHF, fill = factor(TRTMT))) + 
+  labs(x="Treatment",
+       title="Hospitalisation between treatment groups") +
+  scale_fill_manual(values = c("#f09c1b", "#4f78b4"),
+    name = "Treatment group") +
+  geom_bar(alpha=0.7, position="fill") +
+  labs(x="Hospitalization for CVD",title = "Hospitalization due to WHF in treatment groups")
 
 ```
 
 ```{r}
 #Plot 4
+#Death due to CVD
+
+cvd_plot_strat<- ggplot(cvd_mortality_by_treatment,
+                        aes(x = CVD, y=Mortality_Rate , fill = TRTMT))+
+  #using position dodge to place each treatment groups side by side
+  geom_col(position = position_dodge(width = 0.8), color = "lightblue")+
+   scale_y_continuous(labels = scales::percent)+
+  scale_fill_manual(values = c("#8970b3", "#2d7e74"))+
+  labs(
+    title = "Mortality rate by CVD status in each treatment group ",
+    x = "Cardiovascular Disease(CVD) status",
+    y = "Mortality Rate(%)",
+    fill = "Treatment Group",
+    caption = "\n Mortality rate by among patients with and without CVD in each treatment group")
+
+
+cvd_plot_strat
+ggplotly(cvd_plot_strat)
+```
+
+```{r}
+#Death due to WHF
+whf_plot_strat<- ggplot(whf_mortality_by_treatment,
+                        aes(x = WHF, y=Mortality_Rate , fill = TRTMT))+
+  #using position dodge to place each treatment groups side by side
+  geom_col(position = position_dodge(width = 0.8), color = "lightblue")+
+   scale_y_continuous(labels = scales::percent)+
+  scale_fill_manual(values = c("#8970b3", "#e74"))+
+  labs(
+    title = "Mortality rate by Worsening Heart Failure in each treatment group ",
+    x = "Worsening Heart Failure(WHF) status",
+    y = "Mortality Rate(%)",
+    fill = "Treatment Group",
+    caption = "\n Mortality rate by among patients with and without Worsening Heart Failure in each treatment group")
+whf_plot_strat
+
+ggplotly(whf_plot_strat)
+```
+
+
+```{r}
+#Plot 6
 #Survival 
 ```
 
