@@ -1,7 +1,14 @@
 
 ```{r}
-# Descriptive table
 library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+```
+
+
+```{r}
+# Descriptive table
 
 dig.df<-read_csv("DIG.csv",
                  col_types = "nnnnnnnnnnnnnnnnn")
@@ -48,10 +55,12 @@ dig.df$DEATH <- as.numeric(as.character(dig.df$DEATH))
 dig.df$DEATH<- factor(dig.df$DEATH,
                      levels = c(0,1),
                      labels = c("Alive", "Death")) 
-
+names(dig.df)
+dig.df <- dig.df%>%
+  mutate(Month = round(DEATHDAY/30, ))
 dig.df
 ```
-Instead of selecting the columns here, i did the cooking in the Assignment 4 then i just brought the output here.I will try to change the title of the columns later, to be more discernable. 
+ 
 ```{r}
 #Plot 2 
 #Hospitalization due to CVD
@@ -78,8 +87,41 @@ dig.df %>% ggplot(aes(x=WHF, fill = factor(TRTMT))) +
 
 ```
 
+
 ```{r}
+
 #Plot 4
+# Month of Death in Treatment Groups
+Month_summary<- dig.df%>%
+  summarise(
+    count =n(),
+    Min = min(Month, na.rm = T),
+    Q1 = quantile(Month,0.25, na.rm = T),
+    Median = median(Month, na.rm = T),
+    Average = mean(Month, na.rm = T),
+    Q3 = quantile(Month,0.75, na.rm = T),
+    Max = max(Month, na.rm= T),
+    SD = sd(Month, na.rm = T),
+  )
+Month_summary
+    
+# Graphical summary
+dig.df
+ggplot(dig.df, 
+       aes(x = Month, fill = TRTMT, y = after_stat(density)) ) + 
+  geom_histogram() +
+  geom_density(alpha = 0.8) +
+  labs(title = "Distribution of summary statstics DIG participants in each treatment group", 
+       subtitle = "Histogram for Month of Death and Treatment Group",
+       caption = "\n: Distribution of month of death of patients by
+              in each treatment arms",
+       x = "Month", 
+       y= "Frequency")
+
+```
+
+```{r}
+#sub-tab of death
 #Death due to CVD
 library(tidyr)
 library(plotly)
@@ -113,6 +155,7 @@ ggplotly(cvd_plot_strat)
 ```
 
 ```{r}
+#subtab two
 #Death due to WHF
 library(tidyr)
              
@@ -150,6 +193,35 @@ ggplotly(whf_plot_strat)
 ```{r}
 #Plot5
 #Scatter
+clean_dig.df<- dig.df%>% # omitting any missed BP measurement from the dataset
+  filter(
+    !is.na(SYSBP),
+    !is.na(DIABP),
+    !is.na(TRTMT),
+    !is.na(HYPERTEN),
+  )
+clean_dig.df
+
+# Animated graphical presentation 
+clean_dig.df %>%
+  plot_ly(
+    x = ~SYSBP , 
+    y = ~DIABP , 
+    size = ~BMI, 
+    color = ~TRTMT, 
+    colors = c('gold', 'black'),
+    frame = ~ Month, 
+    text = ~ID, 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers'
+  ) %>% 
+  layout(
+  xaxis = list(
+    type = "log"
+  )
+  ) %>%
+  animation_opts(frame = 1000, transition = 250, redraw = FALSE)
 
 ```
 
