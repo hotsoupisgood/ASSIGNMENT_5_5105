@@ -3,6 +3,7 @@ library(ggplot2)
 library(shinydashboard)
 library(dplyr)
 library(plotly)
+library(rsconnect)
 # load dataset globally
 dig.df=read.csv("DIG.csv") # this is not good practice, will reconfigure if I have time
 
@@ -16,7 +17,7 @@ ui <- dashboardPage(
   # filters hamburg menu
   dashboardSidebar(
     #selectInput(inputId = "cvd",  label = "Filter on CVD Status:", choices = c("CVD", "No CVD", "All"), selected="All"),
-    selectInput(inputId = "sex", label = "Select Subject Sex:",    choices = c("Female", "Male"), multiple=T, selected=c("Female","Male")),
+    selectInput(inputId = "sex", label = "Select Subject Sex:",    choices = c("Female","Male","All"),  selected=c("All")),
     sliderInput("bmi", "Select Body Mass Range:",    
                 min =     min(dig.df$BMI,na.rm=T),  max=max(dig.df$BMI,na.rm=T),# range
                 value = c(min(dig.df$BMI,na.rm=T),  max(dig.df$BMI,na.rm=T))), # defaults 
@@ -46,7 +47,7 @@ ui <- dashboardPage(
            ), 
            # Tab 4-------------------------------------
            tabPanel("Survival", 
-                       fluidRow(box(plotlyOutput("plot3"), width=12, title = "Survival", collapsible = F, status = "warning", solidHeader = TRUE))
+                       fluidRow(box(plotlyOutput("tb3_plot1"), width=12, title = "Survival", collapsible = F, status = "warning", solidHeader = TRUE))
            ),
            # Tab 5-------------------------------------
            tabPanel("Scatter", 
@@ -58,15 +59,16 @@ ui <- dashboardPage(
 
 # app logic
 server <- function(input, output) {
-  # global filtering
+  #Filtering ------
   dig.df=clean_df(dig.df)
   # filter change event handler
   dig_filtered_df <- reactive({
     # make copy to not change global in case we need the global df
     df_copy=dig.df
     # gender handler
-    mapping_sex=c("FEMALE"=2,"MALE"=1)
-    df_copy=df_copy%>%filter(SEX %in% input$sex)
+    if(!input$sex=="All"){
+      df_copy=df_copy%>%filter(SEX==input$sex)
+    }
     # age handler (inclusive filter)
     df_copy=df_copy%>%filter(AGE>=input$age[1] & AGE<=input$age[2])
     # bmi handler (inclusive filter)
@@ -91,7 +93,8 @@ server <- function(input, output) {
   output$tb2_plot1=renderPlotly({cvd_plot_strat(dig_filtered_df())})
   # Death due to WHF
   output$tb2_plot2=renderPlotly({whf_plot_strat(dig_filtered_df())})
-  
+  # Survival plot
+  output$tb3_plot1=renderPlotly({surv_plot(dig_filtered_df())})
   #Scatter Plot-------------------------------------------------------
   output$tb4_plot1=renderPlotly({animation_plot(dig_filtered_df())})
 }
@@ -115,7 +118,7 @@ hosp_cvd=function(input_df){
     geom_bar(alpha=0.7, position="fill") +
     labs(x="Hospitalization for CVD",title = "Hospitalization in due to CVD in each"))
 }
-#Death----------
+#Death--------------------
 #Death due to CVD
 cvd_plot_strat=function(input_df){
   cvd_mortality_by_treatment<- input_df%>%
@@ -161,6 +164,20 @@ whf_plot_strat=function(input_df){
       fill = "Treatment Group",
       caption = "\n Mortality rate by among patients with and without Worsening Heart Failure in each treatment group")
   return(ggplotly(whf_plot_strat_))
+}
+#Survival plot
+surv_plot=function(input_df){
+  # Graphical summary
+  return(ggplot(input_df, 
+         aes(x = Month, fill = TRTMT, y = after_stat(density)) ) + 
+    geom_histogram() +
+    geom_density(alpha = 0.8) +
+    labs(title = "Distribution of summary statstics DIG participants in each treatment group", 
+         subtitle = "Histogram for Month of Death and Treatment Group",
+         caption = "\n: Distribution of month of death of patients by
+              in each treatment arms",
+         x = "Month", 
+         y= "Frequency"))
 }
 #Scatter/animation---------
 animation_plot=function(input_df){
