@@ -188,6 +188,30 @@ ggplotly(whf_plot_strat)
 ```{r}
 #Plot 6
 #Survival 
+library(survival)
+library(survminer)
+library(plotly)
+
+# Fitting the survival model(Kaplan-Meier Method)
+survival_function <- survfit(Surv(dig.df$Month,
+                                  dig.df$DEATH == "Death")~1, data = dig.df, na.action = na.omit, conf.int = TRUE) 
+str(survival_function)
+summary(survival_function)
+plot(survival_function)
+
+base_P<- ggsurvplot(
+  survival_function, data = dig.df,
+  title = "Overall Patient survival curve( Kaplan-Meier)",
+  xlab = "Time(Approximate Months)",
+  ylab = "survival Probability",
+  risk.table = TRUE,
+  conf.int = TRUE,
+  ggtheme = theme_bw()
+)
+
+
+p_interactive <- ggplotly(base_P$plot)
+p_interactive
 ```
 
 ```{r}
