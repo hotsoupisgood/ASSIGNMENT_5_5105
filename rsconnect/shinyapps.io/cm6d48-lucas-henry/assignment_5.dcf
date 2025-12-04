@@ -1,0 +1,13 @@
+name: assignment_5
+title:
+username: cm6d48-lucas-henry
+account: cm6d48-lucas-henry
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16229310
+bundleId: 11272992
+url: https://cm6d48-lucas-henry.shinyapps.io/assignment_5/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .vscode/settings.json|data/DIG_code_book.pdf|readme.md

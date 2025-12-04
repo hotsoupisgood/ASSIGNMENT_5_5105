@@ -3,9 +3,11 @@ library(ggplot2)
 library(shinydashboard)
 library(dplyr)
 library(plotly)
+library(survival)
+library(survminer)
 library(rsconnect)
 # load dataset globally
-dig.df=read.csv("DIG.csv") # this is not good practice, will reconfigure if I have time
+dig.df=read.csv("data/DIG.csv") # this is not good practice, will reconfigure if I have time
 
 ui <- dashboardPage(
   # change the background
@@ -43,7 +45,8 @@ ui <- dashboardPage(
            # Tab 3-------------------------------------
            tabPanel("Mortality", 
                     fluidRow(box(plotlyOutput("tb2_plot1"),width=12, title = "By Cardio Vascular Disease", collapsible = T, status = "warning", solidHeader = TRUE)), 
-                    fluidRow(box(plotlyOutput("tb2_plot2"), width=12, title = "By Worsening Heart Failure", collapsible = T, status = "warning", solidHeader = TRUE))
+                    fluidRow(box(plotlyOutput("tb2_plot2"), width=12, title = "By Worsening Heart Failure", collapsible = T, status = "warning", solidHeader = TRUE)),
+                    fluidRow(box(plotlyOutput("tb2_plot3"), width=12, title = "Distribution of Mortality over time", collapsible = T, status = "warning", solidHeader = TRUE))
            ), 
            # Tab 4-------------------------------------
            tabPanel("Survival", 
@@ -89,12 +92,14 @@ server <- function(input, output) {
   # Hospitalisation due to CVD
   output$tb1_plot2=renderPlotly({hosp_cvd(dig_filtered_df())})
   #Mortality Rate-------------------------------------------------------
-  # Death due to CVD
+  #   Death due to CVD
   output$tb2_plot1=renderPlotly({cvd_plot_strat(dig_filtered_df())})
-  # Death due to WHF
+  #   Death due to WHF
   output$tb2_plot2=renderPlotly({whf_plot_strat(dig_filtered_df())})
-  # Survival plot
-  output$tb3_plot1=renderPlotly({surv_plot(dig_filtered_df())})
+  #   Mortality distribution
+  output$tb2_plot3=renderPlotly({surv_plot(dig_filtered_df())})
+  # Survival plot-------------------------------------------------------
+  output$tb3_plot1=renderPlotly({kapmeier_plot(dig_filtered_df())})
   #Scatter Plot-------------------------------------------------------
   output$tb4_plot1=renderPlotly({animation_plot(dig_filtered_df())})
 }
@@ -166,6 +171,25 @@ whf_plot_strat=function(input_df){
   return(ggplotly(whf_plot_strat_))
 }
 #Survival plot
+kapmeier_plot=function(input_df){
+  # Fitting the survival model(Kaplan-Meier Method)
+  survival_function <- survfit(Surv(Month, DEATH == "Death") ~ 1, 
+                               data = input_df, na.action = na.omit, 
+                               conf.int = TRUE) 
+  base_P<- ggsurvplot(
+    survival_function, data = input_df,
+    title = "Overall Patient survival curve( Kaplan-Meier)",
+    xlab = "Time(Approximate Months)",
+    ylab = "survival Probability",
+    risk.table = TRUE,
+    conf.int = TRUE,
+    ggtheme = theme_bw()
+  )
+  
+  
+ return(ggplotly(base_P$plot))
+}
+#Mortality time plot
 surv_plot=function(input_df){
   # Graphical summary
   return(ggplot(input_df, 
