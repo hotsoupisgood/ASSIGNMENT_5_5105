@@ -44,9 +44,9 @@ ui <- dashboardPage(
                     ),
            # Tab 3-------------------------------------
            tabPanel("Mortality", 
+                    fluidRow(box(plotlyOutput("tb2_plot3"), width=12, title = "Distribution of Mortality over time", collapsible = T, status = "warning", solidHeader = TRUE)),
                     fluidRow(box(plotlyOutput("tb2_plot1"),width=12, title = "By Cardio Vascular Disease", collapsible = T, status = "warning", solidHeader = TRUE)), 
-                    fluidRow(box(plotlyOutput("tb2_plot2"), width=12, title = "By Worsening Heart Failure", collapsible = T, status = "warning", solidHeader = TRUE)),
-                    fluidRow(box(plotlyOutput("tb2_plot3"), width=12, title = "Distribution of Mortality over time", collapsible = T, status = "warning", solidHeader = TRUE))
+                    fluidRow(box(plotlyOutput("tb2_plot2"), width=12, title = "By Worsening Heart Failure", collapsible = T, status = "warning", solidHeader = TRUE))
            ), 
            # Tab 4-------------------------------------
            tabPanel("Survival", 
