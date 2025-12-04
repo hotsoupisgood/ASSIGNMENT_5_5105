@@ -18,7 +18,6 @@ ui <- dashboardPage(
                           class = "dropdown")),
   # filters hamburg menu
   dashboardSidebar(
-    #selectInput(inputId = "cvd",  label = "Filter on CVD Status:", choices = c("CVD", "No CVD", "All"), selected="All"),
     selectInput(inputId = "sex", label = "Select Subject Sex:",    choices = c("Female","Male","All"),  selected=c("All")),
     sliderInput("bmi", "Select Body Mass Range:",    
                 min =     min(dig.df$BMI,na.rm=T),  max=max(dig.df$BMI,na.rm=T),# range
@@ -32,8 +31,7 @@ ui <- dashboardPage(
     tabBox(width = 12, id = "tabs",
            # Tab 1-------------------------------------
            tabPanel("Descriptive Table", 
-                    fluidRow(
-                      box(width=12, title = "Descriptive Table", collapsible = F, status = "warning", solidHeader = TRUE,
+                    fluidRow(box(width=12, title = "Descriptive Table", collapsible = F, status = "warning", solidHeader = TRUE,
                           dataTableOutput("table1"))
                       )
            ),
@@ -50,11 +48,11 @@ ui <- dashboardPage(
            ), 
            # Tab 4-------------------------------------
            tabPanel("Survival", 
-                       fluidRow(box(plotlyOutput("tb3_plot1"), width=12, title = "Survival", collapsible = F, status = "warning", solidHeader = TRUE))
+                    fluidRow(box(plotlyOutput("tb3_plot1"), width=12, title = "Survival", collapsible = F, status = "warning", solidHeader = TRUE))
            ),
            # Tab 5-------------------------------------
-           tabPanel("Scatter", 
-                    fluidRow(box(plotlyOutput("tb4_plot1"), width=12, title = "Scatter", collapsible = F, status = "warning", solidHeader = TRUE))
+           tabPanel("Blood Pressure Animation", 
+                    fluidRow(box(plotlyOutput("tb4_plot1"), width=12, title = "Blood Pressure over Time (Month) Animation", collapsible = F, status = "warning", solidHeader = TRUE))
            )
     )
   )
